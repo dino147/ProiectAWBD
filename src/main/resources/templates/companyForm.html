@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>AWBD Company Form</title>
+
+    <script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/5.3.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.3.2/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/webjars/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+<body>
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="nav-link" th:href="@{'/'}"> <i class="fas fa-home mx-1"></i>  </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto topnav">
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{'/company'}">Companies</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{'/invoice'}">Invoices</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{'/employee'}">Employees</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{'/balancesheet'}">Balance Sheets</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                    <a class="nav-link btn-primary" th:href="@{'/company/form'}">
+                        <i class="fas fa-plus-circle"></i> Add
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto topnav">
+                <li class="nav-item">
+                    <a class="nav-link btn-primary" th:href="@{'/login'}">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <form id="logout-form" th:action="@{/logout}" method="post">
+                        <button type="submit" class="nav-link btn-primary">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </form>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn-primary" th:href="@{'/participant/form'}">
+                        <i class="fas fa-user-plus"></i> Register
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<form method="post" th:action="@{/company}" th:object="${company}">
+    <input th:field="*{companyId}" type="hidden"/>
+    <div class="container" style="margin-top: 50px">
+        <div class="panel panel-default">
+            <div  class="panel-heading">
+                <h3> </h3>
+            </div>
+
+            <div class="panel-body">
+                <div class="form-group row">
+                    <div class="col-md-2 ">
+                        <label th:for="domains">Domains</label>
+                        <ul id="domains" style="list-style: none;">
+                            <li th:each="domain: ${domainsAll}">
+                                <input th:field="*{domain}"
+                                       th:value="${domain.domainId}"
+                                       type="checkbox"/>
+                                <label
+                                        th:for="${#ids.prev('domain')}"
+                                        th:text="${domain.name}">
+                                </label>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div class="col-md-5 ">
+                        <div class="form-row">
+                            <input class="form-control" th:field="*{name}" type="text" placeholder="Company name"/>
+                        </div>
+                        <br>
+                        <div class="form-row">
+                            <label th:if="${#fields.hasErrors('type')}" th:errors="*{type}">Error</label>
+                            <input class="form-control" th:field="*{type}" type="text" placeholder="Company type"/>
+                        </div>
+                        <br>
+                        <div class="form-row">
+                            <label th:if="${#fields.hasErrors('director')}" th:errors="*{director}">Error</label>
+                            <input class="form-control" th:field="*{director}" type="text" placeholder="Director"/>
+                        </div>
+                        <br>
+<!--                        <div class="form-row">-->
+<!--                            <textarea class="form-control" th:field="*{info.description}" placeholder="description" />-->
+<!--                        </div>-->
+
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-1 ml-md-auto">
+                        <button class="btn btn-primary" type="submit">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+</body>
+</html>
